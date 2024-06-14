@@ -4,6 +4,21 @@ let check=document.getElementById('check-word')
 let inpt=document.getElementById('input-usr')
 let serResponse=document.getElementById('server-response')
 
+ //feature recs:
+    //1.can add the option to select maximum letters
+    //2.highscore maybe and local browser storage
+    //3.generate words based on frequency of usage in daily life?
+    //4.reshuffle the word as a user-friendly feature
+    //5. hints
+
+
+    //how does it work when i'm not live?api calls get made that way?
+
+    //cases:
+    //shuffled word is the same as the original
+    //
+    //
+
 let options={
     method:'GET',
     headers:{"x-api-key":apiKey}
@@ -56,32 +71,36 @@ async function generateWord(){
         let response=await fetch(url, options);
         let data=await response.json();
             console.log(data);
-            // word.innerText=data['word']
             randomWord=data['word']
+            // randomWord='scramble' the name of the app is the result of this 
     }
     //gonna generate only words less than 8 characters
     //humans can properly unscramble words that contain upto 8 letters
-    //feature rec:1.can add the option to select maximum letters
-    //2.highscore maybe and local storage
-    //3.generate words based on frequency of usage in daily life?
-    while(randomWord.length>8 || containsCapitalLetter(randomWord))
+    while(randomWord.length>8 ||containsCapitalLetter(randomWord))
             //scramble it
     return randomWord;
 }
 
 async function checkPart(){
-    let usr_input=inpt.value
-    // console.log(usr_input);
-    let validWord=await IsWordValid(usr_input)
-    // console.log(validWord);
-    if(validWord){
-        serResponse.innerText= `Yayy! ${usr_input} is a valid word!!generating next word...`;
-        init()
+    if(usr_input.value.length==0){
+        serResponse.innerText='Enter a valid word'
     }
-    else{
-        serResponse.innerText=`${usr_input} is not a valid word..try again kiddo`
+    else {
+        let usr_input=inpt.value.toLowerCase()
+    
+        // console.log(usr_input);
+        let validWord=await IsWordValid(usr_input)
+        // console.log(validWord);
+        if(validWord){
+            serResponse.innerText= `Yayy! ${usr_input} is a valid word!!generating next word...`;
+            init()
+        }
+        else{
+            serResponse.innerText=`${usr_input} is not a valid word..try again kiddo`
+        }
+        inpt.value='';
     }
-    inpt.value='';
+   
 }
 
 
@@ -93,4 +112,3 @@ check.addEventListener('click', checkPart)
 inpt.addEventListener('keydown', (event)=>{
     if(event.key=='Enter'){checkPart()}
 })
-README.md
